@@ -14,6 +14,7 @@ class LIO
 {
 public:
 	static IO_ERROR LoadImage(const std::string& filename, cv::Mat& image);
+	static IO_ERROR SaveImage(const std::string& filename, const cv::Mat& image);
 };
 
 #endif
