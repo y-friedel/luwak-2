@@ -82,9 +82,9 @@ IO_ERROR LUW_MATRIXFILTER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 			double d_result = ((mat_temp.at<double>(ith_row, ith_col) - min_intensity) / max_intensity) * 255.;
 			uchar u_result = uchar(d_result);
 
-			if (u_result < mean_intensity)
-				u_result = 0;
-			else u_result = 255;
+			//if (u_result < mean_intensity)
+			//	u_result = 0;
+			//else u_result = 255;
 
 			image_out.at<uchar>(ith_row, ith_col) = u_result;
 			//image_out = ((mat_temp - min_intensity) / 30.) * 255;
