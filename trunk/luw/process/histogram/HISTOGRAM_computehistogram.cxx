@@ -1,7 +1,7 @@
-#include "luw_histogram.h"
+#include "histogram.h"
 #include <opencv2/core/core.hpp> //Mat
 
-IO_ERROR LUW_HISTOGRAM::ComputeHistogram(const cv::Mat& image_in)
+IO_ERROR LUW::HISTOGRAM::ComputeHistogram(const cv::Mat& image_in)
 {
 	if (!image_in.data)
 		return IO_NOT_FOUND;

@@ -1,7 +1,7 @@
-#include "luw_revert.h"
+#include "luw/process/revert/revert.h"
 #include <opencv2/core/core.hpp> //Mat
 
-IO_ERROR LUW_REVERT::Apply(const cv::Mat& image_in, cv::Mat& image_out)
+IO_ERROR LUW::REVERT::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 {
 	if (!image_in.data)
 		return IO_NOT_FOUND;
