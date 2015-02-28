@@ -1,10 +1,10 @@
-#include "luw_blur.h"
+#include "blur.h"
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui_c.h>
 #include <opencv2/core/core.hpp> //Mat
 
-IO_ERROR LUW_BLUR::Apply(const cv::Mat& image_in, cv::Mat& image_out)
+IO_ERROR LUW::BLUR::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 {
 	if (!image_in.data)
 		return IO_NOT_FOUND;
