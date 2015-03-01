@@ -1,14 +1,18 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
-#include "lio/lio.h"
-#include "luw/luw_history/luw_history.h"
 #include <string>
 
-#include "luw/luw_process/luw_revert/luw_revert.h"
-#include "luw/luw_process/luw_blur/luw_blur.h"
-#include "luw/luw_process/luw_matrixfilter/luw_matrixfilter.h"
+//LIO
+#include "lio/lio.h"
 
+//LUW
+#include "luw/history/history.h"
+#include "luw/process/revert/revert.h"
+#include "luw/process/blur/blur.h"
+#include "luw/process/matrixfilter/matrixfilter.h"
+#include "luw/process/histogram/histogram.h"
+#include "luw/process/bayer/bayer.h"
 
 int main(int argc, char* argv[])
 {
@@ -21,8 +25,13 @@ int main(int argc, char* argv[])
 
 	cv::Mat image;
 
-	std::string input = "resources/Bikesgray.jpg";
-	int err = LIO::LoadImage(input, image);
+	//std::string input = "resources/green-bird-chillis.jpg";
+	std::string input = "resources/eye.JPG";
+	//std::string input = "resources/lena.bmp";
+	//std::string input = "resources/Bikesgray.jpg";
+
+	IO_ERROR err = LIO::LoadImage(input, image, CV_LOAD_IMAGE_COLOR);
+	//IO_ERROR err = LIO::LoadImage(input, image);
 
 	//int err = LIOinput::LoadImage(argv[1], image);
 
@@ -31,29 +40,41 @@ int main(int argc, char* argv[])
 		std::cout << "Could not open or find the image : " << input << std::endl;
 		//std::cout << "Could not open or find the image : " << argv[1] << std::endl;
 		system("pause");
-		return -1;
+		return err;
 	}
 
 	cv::namedWindow("Display window", cv::WINDOW_AUTOSIZE);// Create a window for display.
 	imshow("Display window", image);                   // Show our image inside it.
 
-	LUW_HISTORY main_history(image);
-	LUW_REVERT revert;
-	LUW_BLUR blur(1);
+	LUW::HISTORY main_history(image);
+	LUW::REVERT revert;
+	LUW::BLUR blur(5);
+	LUW::HISTOGRAM histo;
+	LUW::BAYER bayer(LUW::BAYER::BLACK_WHITE);
+	LUW::BAYER bayer_revert(LUW::BAYER::REVERT);
 
 	char filter_prewitt[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
 	char filter_sobel[9]   = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
 	cv::Mat mat_filter = cv::Mat(3, 3, CV_8SC1, &filter_sobel);
-	LUW_MATRIXFILTER matrix_filter = LUW_MATRIXFILTER(mat_filter);
+	LUW::MATRIXFILTER matrix_filter = LUW::MATRIXFILTER(mat_filter);
 
-	//main_history.AddNextStep(revert);
-	main_history.AddNextStep(blur);
-	main_history.AddNextStep(matrix_filter);
+	//err = main_history.AddNextStep(matrix_filter);
+	//err = main_history.AddNextStep(blur);
+	//err = main_history.AddNextStep(histo);
+	err = main_history.AddNextStep(bayer);
+	err = main_history.AddNextStep(bayer_revert);
+
+	if (err != IO_OK) // Check for invalid compute
+	{
+		std::cout << "error in process " << input << std::endl;
+		system("pause");
+		return err;
+	}
 
 	cv::namedWindow("Result", cv::WINDOW_AUTOSIZE);// Create a window for display.
 	imshow("Result", main_history.last_computed_image);                   // Show our image inside it.
 
 	cvWaitKey(0);
 
-	LIO::SaveImage("output/bike_sobel.png", main_history.last_computed_image);
+	LIO::SaveImage("output/last_output.png", main_history.last_computed_image);
 }

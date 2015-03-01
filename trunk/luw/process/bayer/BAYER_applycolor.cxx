@@ -1,0 +1,46 @@
+#include "luw/process/bayer/bayer.h"
+#include <opencv2/core/core.hpp> //Mat
+
+IO_ERROR LUW::BAYER::ApplyColor(const cv::Mat& image_in, cv::Mat& image_out)
+{
+	if (!image_in.data)
+		return IO_NOT_FOUND;
+
+	if (image_in.type() != CV_8UC3)
+		return IO_INCOMPATIBLE;
+
+	image_in.copyTo(image_out);
+
+#pragma omp parrallel
+	for (int ith_row = 0; ith_row < image_out.rows; ++ith_row)
+	{
+#pragma omp parrallel
+		for (int ith_col = 0; ith_col < image_out.cols; ++ith_col)
+		{
+			cv::Vec3b rgb_pixel = image_in.at<cv::Vec3b>(ith_row, ith_col);
+			if (ith_row % 2 == ith_col % 2)
+			{
+				rgb_pixel[0] = 0;
+				rgb_pixel[2] = 0;
+				image_out.at<cv::Vec3b>(ith_row, ith_col) = rgb_pixel;
+			}
+			else if (ith_row % 2)
+			{
+				//rgb_pixel[0] = 0;
+				rgb_pixel[1] = 0;
+				rgb_pixel[2] = 0;
+				image_out.at<cv::Vec3b>(ith_row, ith_col) = rgb_pixel;
+			}
+			else
+			{
+				rgb_pixel[0] = 0;
+				rgb_pixel[1] = 0;
+				//rgb_pixel[2] = 0;
+				image_out.at<cv::Vec3b>(ith_row, ith_col) = rgb_pixel;
+			}
+
+		}
+	}
+
+	return IO_OK;
+}

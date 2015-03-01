@@ -6,6 +6,9 @@ IO_ERROR LUW::MATRIXFILTER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 	if (!image_in.data)
 		return IO_NOT_FOUND;
 
+	if (image_in.type() != CV_8UC1)
+		return IO_INCOMPATIBLE;
+
 	image_in.copyTo(image_out);
 
 	cv::Mat mat_temp = cv::Mat(image_in.rows, image_in.cols, CV_64FC1);

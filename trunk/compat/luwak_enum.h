@@ -7,6 +7,7 @@ enum IO_ERROR
 	IO_OK,
 	IO_ERR,
 	IO_NOT_FOUND,
+	IO_INCOMPATIBLE,
 };
 
 #endif
