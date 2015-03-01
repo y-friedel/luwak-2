@@ -21,9 +21,11 @@ namespace LUW
 
 	protected:
 		IO_ERROR ComputeHistogram(const cv::Mat& image_in);
+		IO_ERROR ComputeCumulatedHistogram();
 
 	protected:
 		std::vector<int> m_histogram;
+		std::vector<int> m_cumulated_histogram;
 
 
 	};

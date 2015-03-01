@@ -10,11 +10,12 @@ namespace cv
 	class Mat;
 };
 
-class LIO
+namespace LIO
 {
-public:
-	static IO_ERROR LoadImage(const std::string& filename, cv::Mat& image);
-	static IO_ERROR SaveImage(const std::string& filename, const cv::Mat& image);
+	IO_ERROR LoadImage(const std::string& filename, cv::Mat& image, int type = 0); //CV_LOAD_IMAGE_GRAYSCALE
+	IO_ERROR SaveImage(const std::string& filename, const cv::Mat& image);
+
+	std::string Type2Str(int type);
 };
 
 #endif

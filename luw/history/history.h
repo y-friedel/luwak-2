@@ -19,8 +19,8 @@ namespace LUW
 		{
 			LUW::STEP next_step(last_computed_image, process);
 			history.push_back(next_step);
-			ComputeHistory();
-			return IO_OK;
+			IO_ERROR err = ComputeHistory();
+			return err;
 		}
 
 		IO_ERROR ComputeHistory()
@@ -36,7 +36,11 @@ namespace LUW
 			//Then recompute all the next steps
 			for (ith_step; ith_step < history.size(); ++ith_step)
 			{
-				history[ith_step].Result(result);
+				IO_ERROR err = history[ith_step].Result(result);
+
+				if (err != IO_OK)
+					return err;
+
 				history[ith_step].has_changed = false;
 
 				//Link it with the next step
