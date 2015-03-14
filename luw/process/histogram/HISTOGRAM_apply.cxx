@@ -1,4 +1,4 @@
-#include "histogram.h"
+#include "luw/process/histogram/histogram.h"
 #include <opencv2/core/core.hpp> //Mat
 
 IO_ERROR LUW::HISTOGRAM::Apply(const cv::Mat& image_in, cv::Mat& image_out)
@@ -38,7 +38,8 @@ IO_ERROR LUW::HISTOGRAM::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 			for (int ith_row = image_out.rows -1 - margin ; ith_row >= 0 + margin; --ith_row)
 			{
 				int row_intensity = (ith_col - margin) / 3;
-				double current_intensity = (double)(m_histogram[row_intensity]) / max_intensity * (height - 2 * margin);
+				double current_intensity = 
+					(double)(m_histogram[row_intensity]) / max_intensity * (height - 2 * margin);
 				double current_cumulated_intensity = 
 					(double)(m_cumulated_histogram[row_intensity]) / m_cumulated_histogram[255] * (height - 2 * margin);
 
