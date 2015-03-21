@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 	char filter_prewitt[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
 	char filter_sobel[9]   = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
 	cv::Mat mat_filter = cv::Mat(3, 3, CV_8SC1, &filter_sobel);
-	LUW::MATRIXFILTER matrix_filter = LUW::MATRIXFILTER(mat_filter);
+	LUW::MATRIXFILTER matrix_filter = LUW::MATRIXFILTER(mat_filter, LUW::MATRIXFILTER::GRADIENT);
 
 	//err = main_history.AddNextStep(matrix_filter);
 	//err = main_history.AddNextStep(blur);
@@ -80,8 +80,8 @@ int main(int argc, char* argv[])
 	LUW::HOUGH     hough;
 	main_history.AddNextStep(blur);
 	main_history.AddNextStep(matrix_filter);
-	main_history.AddNextStep(thresold);
-	main_history.AddNextStep(hough);
+	//main_history.AddNextStep(thresold);
+	//main_history.AddNextStep(hough);
 
 
 	if (err != IO_OK) // Check for invalid compute

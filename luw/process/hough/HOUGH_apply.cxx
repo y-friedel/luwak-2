@@ -6,6 +6,7 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <limits>
 
 
 //Work for filtered image only (TODO : find a way to use it on all the image in the world)
@@ -27,10 +28,10 @@ IO_ERROR LUW::HOUGH::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 	std::vector<cv::Point2d> samples;
 
 	//For the graph render
-	double min_r = 99999999.;
-	double max_r = -99999999.;
-	double min_theta = 99999999.;
-	double max_theta = -99999999.;
+	double min_r = std::numeric_limits<double>::max();
+	double max_r = std::numeric_limits<double>::min();
+	double min_theta = std::numeric_limits<double>::max();
+	double max_theta = std::numeric_limits<double>::min();
 
 	for (int ith_row = 0; ith_row < image_in.rows; ++ith_row)
 	{
@@ -61,7 +62,7 @@ IO_ERROR LUW::HOUGH::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 
 
 	int max_value = 0;
-	for (int i = 0; i < samples.size(); ++i)
+	for (unsigned int i = 0; i < samples.size(); ++i)
 	{
 		double r     = samples[i].x;
 		double theta = samples[i].y;

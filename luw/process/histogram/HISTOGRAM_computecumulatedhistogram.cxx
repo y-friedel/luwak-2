@@ -6,7 +6,7 @@ IO_ERROR LUW::HISTOGRAM::ComputeCumulatedHistogram()
 
 	int intensity = 0;
 
-	for (int ith_histo = 0; ith_histo < m_histogram.size(); ++ith_histo)
+	for (unsigned int ith_histo = 0; ith_histo < m_histogram.size(); ++ith_histo)
 	{
 		intensity += m_histogram[ith_histo];
 		m_cumulated_histogram[ith_histo] = intensity;
