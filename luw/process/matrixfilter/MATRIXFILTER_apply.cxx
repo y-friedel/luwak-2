@@ -1,6 +1,5 @@
 #include "luw/process/matrixfilter/matrixfilter.h"
 #include <opencv2/core/core.hpp> //Mat
-#include "opencv/cv.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -19,15 +18,10 @@ IO_ERROR LUW::MATRIXFILTER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 
 	// Opti/Better result (balanced matrix only) :
 	// Compute the worst case of your input matrix, then divide all your final intensities by this
-	int max_matrix = 0;
-	for (int ith_mat_row = -0; ith_mat_row < m_filter_matrix.rows; ++ith_mat_row)
-	{
-		for (int ith_mat_col = 0; ith_mat_col < m_filter_matrix.cols; ++ith_mat_col)
-		{
-			if (m_filter_matrix.at<char>(ith_mat_row, ith_mat_col) > 0)
-				max_matrix = m_filter_matrix.at<char>(ith_mat_row, ith_mat_col) * 255;
-		}
-	}
+	//int max_matrix = 0;
+	//cv::MatConstIterator_<char> it = m_filter_matrix.begin<char>(), it_end = m_filter_matrix.end<char>();
+	//for (; it != it_end; ++it)
+	//	if ((*it) > 0) max_matrix += (*it) * 255;
 
 	cv::Mat gradients = cv::Mat::zeros(image_in.rows, image_in.cols, CV_64FC2);
 
@@ -128,9 +122,6 @@ IO_ERROR LUW::MATRIXFILTER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 				image_out.at<cv::Vec3b>(ith_row, ith_col) = hsv_pixel;
 			}
 		}
-
-		cv::cvtColor(image_out, image_out, CV_HSV2RGB);
-
 	}
 
 	return IO_OK;

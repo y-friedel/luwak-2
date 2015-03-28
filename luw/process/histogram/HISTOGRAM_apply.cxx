@@ -13,24 +13,22 @@ IO_ERROR LUW::HISTOGRAM::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 	ComputeCumulatedHistogram();
 
 	//Check min/max in order to compute the most beautiful histogram
-	int min_intensity = (*image_in.size);
-	int max_intensity = 0;
+	auto min_intensity = (*image_in.size);
+	auto max_intensity = 0;
 
-	for (unsigned int ith_histo = 0; ith_histo < m_histogram.size(); ++ith_histo)
+	for (auto current_intensity : m_histogram)
 	{
-		if (m_histogram[ith_histo] < min_intensity)
-			min_intensity = m_histogram[ith_histo];
-
-		if (m_histogram[ith_histo] > max_intensity)
-			max_intensity = m_histogram[ith_histo];
+		if (current_intensity < min_intensity) min_intensity = current_intensity;
+		else if (current_intensity > max_intensity) max_intensity = current_intensity;
 	}
 
 	int margin = 50; //px
 	int width  = 1000;
 	int height = 600;
 	
-	image_out = cv::Mat::zeros(height, width, CV_8UC1);
 
+	//Draw the histogram
+	image_out = cv::Mat::zeros(height, width, CV_8UC1);
 	for (int ith_col = 0 + margin; ith_col < image_out.cols - margin; ++ith_col)
 	{
 		if (ith_col % 3 == 0 && (ith_col - margin) / 3 < 256)

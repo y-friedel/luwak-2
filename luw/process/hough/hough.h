@@ -18,6 +18,11 @@ namespace LUW
 		~HOUGH();
 
 		virtual IO_ERROR Apply(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual IO_ERROR ApplyGS(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual IO_ERROR ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out);
+
+	protected:
+		int m_nb_samples;
 
 	};
 

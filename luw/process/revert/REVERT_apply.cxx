@@ -21,6 +21,5 @@ IO_ERROR LUW::REVERT::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 			image_out.at<uchar>(ith_row, ith_col) = 255 - image_in.at<uchar>(ith_row, ith_col);
 		}
 	}
-
 	return IO_OK;
 }

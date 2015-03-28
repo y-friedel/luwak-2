@@ -12,10 +12,12 @@ namespace LUW
 	public:
 
 		//Constructor/Destructor
-		THRESHOLD(unsigned int threshold);
-		~THRESHOLD();
+		THRESHOLD(unsigned int threshold) : m_threshold(threshold){}
+		~THRESHOLD(){}
 
 		virtual IO_ERROR Apply(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual IO_ERROR ApplyGS(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual IO_ERROR ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out);
 
 	private:
 		unsigned int m_threshold;

@@ -6,6 +6,22 @@ IO_ERROR LUW::THRESHOLD::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 	if (!image_in.data)
 		return IO_NOT_FOUND;
 
+	switch (image_in.type())
+	{
+	case CV_8UC1:
+		return ApplyGS(image_in, image_out);
+	case CV_8UC3:
+		return ApplyHSV(image_in, image_out);
+	default:
+		return IO_INCOMPATIBLE;
+	}
+}
+
+IO_ERROR LUW::THRESHOLD::ApplyGS(const cv::Mat& image_in, cv::Mat& image_out)
+{
+	if (!image_in.data)
+		return IO_NOT_FOUND;
+
 	if (image_in.type() != CV_8UC1)
 		return IO_INCOMPATIBLE;
 
@@ -19,6 +35,27 @@ IO_ERROR LUW::THRESHOLD::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 		{
 			if (image_in.at<uchar>(ith_row, ith_col) > m_threshold)
 				image_out.at<uchar>(ith_row, ith_col) = 255;
+		}
+	}
+
+	return IO_OK;
+}
+
+
+IO_ERROR LUW::THRESHOLD::ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out)
+{
+	image_out = cv::Mat::zeros(image_in.rows, image_in.cols, CV_8UC3);
+
+	cv::MatConstIterator_<cv::Vec3b> it_in = image_in.begin<cv::Vec3b>();
+	cv::MatIterator_<cv::Vec3b> it_out = image_out.begin<cv::Vec3b>();
+
+	#pragma omp parrallel
+	for (; it_out != image_out.end<cv::Vec3b>(); ++it_out, ++it_in)
+	{
+		if ((*it_in)[2] > m_threshold)
+		{
+			(*it_out) = (*it_in);
+			(*it_out)[2] = 255;
 		}
 	}
 

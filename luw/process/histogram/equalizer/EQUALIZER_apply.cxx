@@ -19,7 +19,7 @@ IO_ERROR LUW::EQUALIZER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 	int current_pixel_sum = 0;
 	int current_matching = 0;
 
-	for (unsigned int ith_histogram = 0; ith_histogram < m_histogram.size(); ++ith_histogram)
+	for (auto ith_histogram = 0; ith_histogram < m_histogram.size(); ++ith_histogram)
 	{
 		current_pixel_sum = m_cumulated_histogram[ith_histogram];
 		if (current_pixel_sum <= (current_matching + 1)*mean_pixel)

@@ -2,6 +2,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 #include <string>
+#include "opencv/cv.h"
+
 
 //LIO
 #include "lio/lio.h"
@@ -35,6 +37,7 @@ int main(int argc, char* argv[])
 	//std::string input = "resources/lena.bmp";
 	std::string input = "resources/Bikesgray.jpg";
 	//std::string input = "resources/unequalized.jpg";
+	//std::string input = "resources/hough_unit.png";
 
 	//IO_ERROR err = LIO::LoadImage(input, image, CV_LOAD_IMAGE_COLOR);
 	IO_ERROR err = LIO::LoadImage(input, image);
@@ -80,10 +83,10 @@ int main(int argc, char* argv[])
 	LUW::HOUGH     hough;
 	main_history.AddNextStep(blur);
 	main_history.AddNextStep(matrix_filter);
-	//main_history.AddNextStep(thresold);
-	//main_history.AddNextStep(hough);
+	main_history.AddNextStep(thresold);
+	main_history.AddNextStep(hough);
 
-
+	//cv::cvtColor(main_history.m_last_computed_image, main_history.m_last_computed_image, CV_HSV2RGB);
 	if (err != IO_OK) // Check for invalid compute
 	{
 		std::cout << "error in process " << input << std::endl;
@@ -92,9 +95,9 @@ int main(int argc, char* argv[])
 	}
 
 	cv::namedWindow("Result", cv::WINDOW_AUTOSIZE);// Create a window for display.
-	imshow("Result", main_history.last_computed_image);                   // Show our image inside it.
+	cv::imshow("Result", main_history.m_last_computed_image);                   // Show our image inside it.
 
 	cvWaitKey(0);
 
-	LIO::SaveImage("output/last_output.png", main_history.last_computed_image);
+	LIO::SaveImage("output/last_output.png", main_history.m_last_computed_image);
 }
