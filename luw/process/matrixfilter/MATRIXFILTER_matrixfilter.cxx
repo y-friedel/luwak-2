@@ -1,5 +1,5 @@
 #include "matrixfilter.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
 LUW::MATRIXFILTER::MATRIXFILTER(cv::Mat& filter, OUTPUT_LEVEL output_level)
 {

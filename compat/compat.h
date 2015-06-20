@@ -3,4 +3,6 @@
 
 #include "compat/luwak_enum.h"
 
+static const bool use_workdir = 1;
+
 #endif

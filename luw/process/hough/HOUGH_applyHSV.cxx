@@ -2,7 +2,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui_c.h>
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -66,8 +66,8 @@ IO_ERROR LUW::HOUGH::ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out)
 		double r = samples[i].x;
 		double theta = samples[i].y;
 
-		unsigned int x = 100 + (r - min_r) / (max_r - min_r) * (image_temp.rows - 201);
-		unsigned int y = 100 + (theta - min_theta) / (max_theta - min_theta) * (image_temp.cols - 201);
+		unsigned int x = static_cast<unsigned int>(100 + (r - min_r) / (max_r - min_r) * (image_temp.rows - 201));
+		unsigned int y = static_cast<unsigned int>(100 + (theta - min_theta) / (max_theta - min_theta) * (image_temp.cols - 201));
 
 		image_temp.at<int>(x, y) += 1;
 		if (image_temp.at<int>(x, y) > max_value)
@@ -78,7 +78,7 @@ IO_ERROR LUW::HOUGH::ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out)
 	{
 		for (int ith_col = 0; ith_col < image_out.cols; ++ith_col)
 		{
-			image_out.at<uchar>(ith_row, ith_col) = ((double)image_temp.at<int>(ith_row, ith_col) / max_value) * 255;
+			image_out.at<uchar>(ith_row, ith_col) = static_cast<uchar>(((double)image_temp.at<int>(ith_row, ith_col) / max_value) * 255);
 		}
 	}
 

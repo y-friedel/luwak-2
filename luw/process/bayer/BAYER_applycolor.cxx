@@ -1,5 +1,5 @@
 #include "luw/process/bayer/bayer.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
 IO_ERROR LUW::BAYER::ApplyColor(const cv::Mat& image_in, cv::Mat& image_out)
 {

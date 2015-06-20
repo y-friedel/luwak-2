@@ -12,14 +12,22 @@ namespace LUW
 	public:
 
 		//Constructor/Destructor
-		HISTORY(cv::Mat& ori_img) : m_last_computed_image(ori_img) { };
+		HISTORY(cv::Mat& ori_img); // : m_last_computed_image(ori_img) { };
 		~HISTORY() { };
 
 		IO_ERROR AddNextStep(LUW::PROCESS& process);
 		IO_ERROR ComputeHistory();
 
-		std::vector<LUW::STEP> m_history;
-		cv::Mat m_last_computed_image;
+		LUW::HISTORY& operator+(LUW::PROCESS& process)
+		{
+			IO_ERROR msg = AddNextStep(process);
+			return (*this);
+		}
+
+		const std::vector<cv::Mat>& GetLastResults() { return m_steps.back(); }
+
+		std::vector<LUW::PROCESS> m_process;
+		std::vector< std::vector<cv::Mat> > m_steps;
 
 	private:
 

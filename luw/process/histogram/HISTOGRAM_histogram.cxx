@@ -1,5 +1,5 @@
 #include "luw/process/histogram/histogram.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
 LUW::HISTOGRAM::HISTOGRAM()
 {

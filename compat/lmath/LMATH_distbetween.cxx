@@ -2,7 +2,7 @@
 #define __LUW_MATH_H_
 
 #include "compat\lmath\lmath.h"
-#include <opencv2/core/core.hpp> //Point
+#include <opencv2/core.hpp> //Point
 
 namespace LUW_MATH
 {

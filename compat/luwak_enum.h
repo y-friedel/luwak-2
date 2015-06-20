@@ -10,4 +10,12 @@ enum IO_ERROR
 	IO_INCOMPATIBLE,
 };
 
+enum COLOR_DEFINITION
+{
+	CD_GS, //GrayScale
+	CD_RGB,
+	CD_HSV,
+};
+
+
 #endif

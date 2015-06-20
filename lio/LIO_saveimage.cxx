@@ -1,5 +1,5 @@
 #include "lio/lio.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 #include <opencv2/highgui/highgui.hpp> //imwrite
 
 IO_ERROR LIO::SaveImage(const std::string& filename, const cv::Mat& image)

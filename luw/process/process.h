@@ -1,7 +1,7 @@
 #ifndef __LUW_PROCESS_H_
 #define __LUW_PROCESS_H_
 
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 #include "compat/compat.h"
 
 namespace LUW
@@ -13,7 +13,11 @@ namespace LUW
 		PROCESS(){}
 		~PROCESS(){}
 
-		virtual IO_ERROR Apply(const cv::Mat& image_in, cv::Mat& image_out) = 0;
+		//PROCESS& operator=(PROCESS&&);
+
+		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
+
+		IO_ERROR LogImage(const cv::Mat& image);
 
 	private:
 	};

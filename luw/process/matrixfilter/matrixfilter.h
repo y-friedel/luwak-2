@@ -1,7 +1,7 @@
 #ifndef __LUW_MATRIXFILTER_H_
 #define __LUW_MATRIXFILTER_H_
 
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 #include "luw/process/process.h"
 #include "compat/compat.h"
 
@@ -20,7 +20,7 @@ namespace LUW
 		MATRIXFILTER(cv::Mat& filter, OUTPUT_LEVEL output_level = INTENSITY);
 		~MATRIXFILTER();
 
-		virtual IO_ERROR Apply(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
 
 	private:
 		cv::Mat m_filter_matrix;

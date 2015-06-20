@@ -1,20 +1,27 @@
 #include "luw/process/threshold/threshold.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
-IO_ERROR LUW::THRESHOLD::Apply(const cv::Mat& image_in, cv::Mat& image_out)
+std::vector<cv::Mat> LUW::THRESHOLD::Apply(const cv::Mat& image_in)
 {
-	if (!image_in.data)
-		return IO_NOT_FOUND;
+	assert(image_in.data);
+
+	std::vector<cv::Mat> results;
+	results.emplace_back();
+	cv::Mat& image_out = results[0];
 
 	switch (image_in.type())
 	{
 	case CV_8UC1:
-		return ApplyGS(image_in, image_out);
+		ApplyGS(image_in, image_out);
+		break;
 	case CV_8UC3:
-		return ApplyHSV(image_in, image_out);
-	default:
-		return IO_INCOMPATIBLE;
+		ApplyHSV(image_in, image_out);
+		break;
 	}
+
+	LogImage(image_out);
+	return std::move(results);
+	
 }
 
 IO_ERROR LUW::THRESHOLD::ApplyGS(const cv::Mat& image_in, cv::Mat& image_out)

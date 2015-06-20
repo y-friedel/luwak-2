@@ -1,10 +1,11 @@
 #ifndef __LUW_BLUR_H_
 #define __LUW_BLUR_H_
 
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 #include "luw/process/process.h"
 #include "compat/compat.h"
 
+#include<set>
 
 namespace LUW
 {
@@ -15,12 +16,13 @@ namespace LUW
 
 		//Constructor/Destructor
 		BLUR(int _size);
+		BLUR(std::set<int> _sizes);
 		~BLUR();
 
-		virtual IO_ERROR Apply(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
 
 	private:
-		int blur_size;
+		std::set<int> m_blur_size;
 
 
 	};

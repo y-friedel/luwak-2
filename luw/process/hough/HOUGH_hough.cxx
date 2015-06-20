@@ -1,9 +1,9 @@
 #include "luw/process/hough/hough.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
-LUW::HOUGH::HOUGH()
+LUW::HOUGH::HOUGH(unsigned int nb_samples) : m_nb_samples(nb_samples)
 {
-	m_nb_samples = 500;
+
 }
 
 LUW::HOUGH::~HOUGH()

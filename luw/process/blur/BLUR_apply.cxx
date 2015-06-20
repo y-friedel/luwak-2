@@ -2,16 +2,22 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui_c.h>
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
-IO_ERROR LUW::BLUR::Apply(const cv::Mat& image_in, cv::Mat& image_out)
+std::vector<cv::Mat> LUW::BLUR::Apply(const cv::Mat& image_in)
 {
-	if (!image_in.data)
-		return IO_NOT_FOUND;
 
-	image_in.copyTo(image_out);
+	std::vector<cv::Mat> results;
 
-	cv::blur(image_in, image_out, cv::Size(blur_size, blur_size));
+	assert(image_in.data);
 
-	return IO_OK;
+	for (auto size_value : m_blur_size)
+	{
+		cv::Mat image_out;
+		image_in.copyTo(image_out);
+		cv::blur(image_in, image_out, cv::Size(size_value, size_value));
+		results.emplace_back(image_out);
+	}
+
+	return results;
 }

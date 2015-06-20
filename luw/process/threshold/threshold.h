@@ -1,7 +1,7 @@
 #ifndef __LUW_THRESHOLD_H_
 #define __LUW_THRESHOLD_H_
 
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 #include "luw/process/process.h"
 #include "compat/compat.h"
 
@@ -15,7 +15,7 @@ namespace LUW
 		THRESHOLD(unsigned int threshold) : m_threshold(threshold){}
 		~THRESHOLD(){}
 
-		virtual IO_ERROR Apply(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
 		virtual IO_ERROR ApplyGS(const cv::Mat& image_in, cv::Mat& image_out);
 		virtual IO_ERROR ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out);
 

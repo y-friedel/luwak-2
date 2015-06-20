@@ -3,7 +3,7 @@
 #define __LUW_STEP_H_
 
 #include "compat/compat.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 #include "luw/process/process.h"
 
 namespace LUW
@@ -14,27 +14,37 @@ namespace LUW
 	public:
 
 		//Constructor/Destructor
-		STEP(cv::Mat& image_in, LUW::PROCESS& _process) : image_to_process(image_in), process(_process), has_changed(true) { }
+		STEP(const cv::Mat images_in, LUW::PROCESS& _process) : m_image_to_process(images_in), m_process(_process), m_has_changed(true) { }
 		~STEP();
 
-		inline IO_ERROR Result(cv::Mat& result)
+		inline std::vector<cv::Mat>&& Result()
 		{
-			return process.Apply(image_to_process, result);
-			has_changed = true;
+			std::vector<cv::Mat> result = m_process.Apply(m_image_to_process);
+			m_has_changed = false;
+
+			return std::move(result);
 		}
 
-		inline int GetColorModel()
+		inline void SetImageToProcess(cv::Mat& image_to_process)
 		{
-			return image_to_process.type();
+			m_image_to_process = image_to_process;
+			m_has_changed = true;
+		}
+
+		inline bool HasChanged() { return m_has_changed; }
+
+		inline const LUW::PROCESS& GetProcess() { return m_process; }
+		IO_ERROR SetProcess(LUW::PROCESS& process)
+		{
+			m_process = process;
+			m_has_changed = true;
 		}
 
 		//Attributes
-		cv::Mat image_to_process;
-		LUW::PROCESS& process;
-		bool has_changed;
 	private:
-
-
+		cv::Mat m_image_to_process;
+		LUW::PROCESS& m_process;
+		bool m_has_changed;
 
 	};
 

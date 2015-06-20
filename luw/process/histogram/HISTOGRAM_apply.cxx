@@ -1,16 +1,21 @@
 #include "luw/process/histogram/histogram.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
-IO_ERROR LUW::HISTOGRAM::Apply(const cv::Mat& image_in, cv::Mat& image_out)
+std::vector<cv::Mat> LUW::HISTOGRAM::Apply(const cv::Mat& image_in)
 {
-	if (!image_in.data)
-		return IO_NOT_FOUND;
-
-	if (image_in.type() != CV_8UC1)
-		return IO_INCOMPATIBLE;
+	assert(image_in.data);
+	assert(image_in.type() == CV_8UC1);
 
 	ComputeHistogram(image_in);
 	ComputeCumulatedHistogram();
+
+	int margin = 50; //px
+	int width = 1000;
+	int height = 600;
+
+	std::vector < cv::Mat > results;
+	results.emplace_back(cv::Mat::zeros(height, width, CV_8UC1));
+	cv::Mat& image_out = results[0];
 
 	//Check min/max in order to compute the most beautiful histogram
 	auto min_intensity = (*image_in.size);
@@ -21,14 +26,8 @@ IO_ERROR LUW::HISTOGRAM::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 		if (current_intensity < min_intensity) min_intensity = current_intensity;
 		else if (current_intensity > max_intensity) max_intensity = current_intensity;
 	}
-
-	int margin = 50; //px
-	int width  = 1000;
-	int height = 600;
 	
-
 	//Draw the histogram
-	image_out = cv::Mat::zeros(height, width, CV_8UC1);
 	for (int ith_col = 0 + margin; ith_col < image_out.cols - margin; ++ith_col)
 	{
 		if (ith_col % 3 == 0 && (ith_col - margin) / 3 < 256)
@@ -60,5 +59,7 @@ IO_ERROR LUW::HISTOGRAM::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 	image_out.col(50) = 50;
 	image_out.row(image_out.rows - 50) = 50;
 
-	return IO_OK;
+	LogImage(image_out);
+
+	return std::move(results);
 }

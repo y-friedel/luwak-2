@@ -1,27 +1,21 @@
 #include "luw/process/matrixfilter/matrixfilter.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-IO_ERROR LUW::MATRIXFILTER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
+std::vector<cv::Mat> LUW::MATRIXFILTER::Apply(const cv::Mat& image_in)
 {
-	if (!image_in.data)
-		return IO_NOT_FOUND;
+	assert(image_in.data);
+	assert(image_in.type() == CV_8UC1);
 
-	if (image_in.type() != CV_8UC1)
-		return IO_INCOMPATIBLE;
+	std::vector<cv::Mat> results;
+	results.emplace_back();
+	cv::Mat& image_out = results[0];
 
 	double max_intensity = 0.;
 	double min_intensity = 255.;
 	double mean_intensity = 0.;
-
-	// Opti/Better result (balanced matrix only) :
-	// Compute the worst case of your input matrix, then divide all your final intensities by this
-	//int max_matrix = 0;
-	//cv::MatConstIterator_<char> it = m_filter_matrix.begin<char>(), it_end = m_filter_matrix.end<char>();
-	//for (; it != it_end; ++it)
-	//	if ((*it) > 0) max_matrix += (*it) * 255;
 
 	cv::Mat gradients = cv::Mat::zeros(image_in.rows, image_in.cols, CV_64FC2);
 
@@ -101,7 +95,7 @@ IO_ERROR LUW::MATRIXFILTER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 	}
 	else if (m_output_level == GRADIENT)
 	{
-		//Note : For HSV, Hue range is[0, 179], Saturation range is[0, 255] and Value range is[0, 255].1
+		//Note : For HSV, Hue range is[0, 179], Saturation range is[0, 255] and Value range is[0, 255]
 		//softwares use different scales.So if you are comparing OpenCV values with them, you need to normalize these ranges.
 		image_out = cv::Mat::zeros(image_in.rows, image_in.cols, CV_8UC3);
 
@@ -116,7 +110,7 @@ IO_ERROR LUW::MATRIXFILTER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 
 				cv::Vec3b hsv_pixel;
 
-				hsv_pixel[0] = (gradient_direction+M_PI) * 90 / M_PI;
+				hsv_pixel[0] = static_cast<uchar>((gradient_direction+M_PI) * 90 / M_PI);
 				hsv_pixel[1] = 255;
 				hsv_pixel[2] = image_value;
 				image_out.at<cv::Vec3b>(ith_row, ith_col) = hsv_pixel;
@@ -124,5 +118,8 @@ IO_ERROR LUW::MATRIXFILTER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 		}
 	}
 
-	return IO_OK;
+
+	LogImage(image_out);
+
+	return std::move(results);
 }

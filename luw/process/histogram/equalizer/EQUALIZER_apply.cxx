@@ -1,14 +1,11 @@
 #include "luw/process/histogram/equalizer/equalizer.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
-IO_ERROR LUW::EQUALIZER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
+std::vector<cv::Mat> LUW::EQUALIZER::Apply(const cv::Mat& image_in)
 {
 
-	if (!image_in.data)
-		return IO_NOT_FOUND;
-
-	if (image_in.type() != CV_8UC1)
-		return IO_INCOMPATIBLE;
+	assert(image_in.data);
+	assert(image_in.type() == CV_8UC1);
 
 	ComputeHistogram(image_in);
 	ComputeCumulatedHistogram();
@@ -19,7 +16,7 @@ IO_ERROR LUW::EQUALIZER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 	int current_pixel_sum = 0;
 	int current_matching = 0;
 
-	for (auto ith_histogram = 0; ith_histogram < m_histogram.size(); ++ith_histogram)
+	for (auto ith_histogram = 0u; ith_histogram < m_histogram.size(); ++ith_histogram)
 	{
 		current_pixel_sum = m_cumulated_histogram[ith_histogram];
 		if (current_pixel_sum <= (current_matching + 1)*mean_pixel)
@@ -33,7 +30,9 @@ IO_ERROR LUW::EQUALIZER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 		}
 	}
 
-	image_in.copyTo(image_out);
+	std::vector < cv::Mat > results;
+	results.emplace_back(image_in.clone());
+	cv::Mat& image_out = results[0];
 
 	#pragma omp parrallel
 	for (int ith_row = 0; ith_row < image_out.rows; ++ith_row)
@@ -45,5 +44,8 @@ IO_ERROR LUW::EQUALIZER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 		}
 	}
 
-	return IO_OK;
+
+	LogImage(image_out);
+
+	return results;
 }

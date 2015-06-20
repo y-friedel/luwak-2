@@ -1,7 +1,7 @@
 #ifndef __LUW_REVERT_H_
 #define __LUW_REVERT_H_
 
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 #include "luw/process/process.h"
 #include "compat/compat.h"
 
@@ -13,9 +13,10 @@ namespace LUW
 
 		//Constructor/Destructor
 		REVERT();
+		REVERT(REVERT& revert);
 		~REVERT();
 
-		virtual IO_ERROR Apply(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
 
 	private:
 

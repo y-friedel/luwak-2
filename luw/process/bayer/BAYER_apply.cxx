@@ -1,10 +1,22 @@
 #include "luw/process/bayer/bayer.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
-IO_ERROR LUW::BAYER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
+
+
+
+
+
+
+
+
+
+std::vector<cv::Mat> LUW::BAYER::Apply(const cv::Mat& image_in)
 {
-	if (!image_in.data)
-		return IO_NOT_FOUND;
+	assert(image_in.data);
+
+	std::vector<cv::Mat> results;
+	results.emplace_back();
+	cv::Mat& image_out = results[0];
 
 	switch (m_result_type)
 	{
@@ -21,5 +33,7 @@ IO_ERROR LUW::BAYER::Apply(const cv::Mat& image_in, cv::Mat& image_out)
 		break;
 	}
 
-	return IO_OK;
+	LogImage(image_out);
+
+	return results;
 }

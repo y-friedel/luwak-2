@@ -1,5 +1,5 @@
 #include "histogram.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
 IO_ERROR LUW::HISTOGRAM::ComputeHistogram(const cv::Mat& image_in)
 {

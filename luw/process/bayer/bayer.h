@@ -1,7 +1,7 @@
 #ifndef __LUW_BAYER_H_
 #define __LUW_BAYER_H_
 
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 #include "luw/process/process.h"
 #include "compat/compat.h"
 
@@ -23,7 +23,7 @@ namespace LUW
 		BAYER(RESULT_TYPE result_type) : m_result_type(result_type) { }
 		~BAYER();
 
-		virtual IO_ERROR Apply(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
 		virtual IO_ERROR ApplyColor(const cv::Mat& image_in, cv::Mat& image_out);
 		virtual IO_ERROR ApplyBlackWhite(const cv::Mat& image_in, cv::Mat& image_out);
 		virtual IO_ERROR ApplyRevert(const cv::Mat& image_in, cv::Mat& image_out);

@@ -13,7 +13,7 @@ namespace LUW
 		EQUALIZER();
 		~EQUALIZER();
 
-		virtual IO_ERROR Apply(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
 
 
 	protected:

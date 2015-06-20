@@ -1,5 +1,5 @@
 #include "luw/process/bayer/bayer.h"
-#include <opencv2/core/core.hpp> //Mat
+#include <opencv2/core.hpp> //Mat
 
 
 //NB : this is a way non-optimized (and non official) version of the Bayer revert 
