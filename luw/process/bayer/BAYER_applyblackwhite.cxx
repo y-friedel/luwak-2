@@ -1,13 +1,13 @@
 #include "luw/process/bayer/bayer.h"
 #include <opencv2/core.hpp> //Mat
 
-IO_ERROR LUW::BAYER::ApplyBlackWhite(const cv::Mat& image_in, cv::Mat& image_out)
+void LUW::BAYER::ApplyBlackWhite(const cv::Mat& image_in, cv::Mat& image_out)
 {
 	if (!image_in.data)
-		return IO_NOT_FOUND;
+		throw std::exception("Bayer Filter : Image not found", IO_NOT_FOUND);
 
 	if (image_in.type() != CV_8UC3)
-		return IO_INCOMPATIBLE;
+		throw std::exception("Bayer Filter : Image type not supported", IO_INCOMPATIBLE);
 
 	image_out = cv::Mat::zeros(image_in.rows, image_in.cols, CV_8UC1);
 
@@ -33,6 +33,4 @@ IO_ERROR LUW::BAYER::ApplyBlackWhite(const cv::Mat& image_in, cv::Mat& image_out
 
 		}
 	}
-
-	return IO_OK;
 }

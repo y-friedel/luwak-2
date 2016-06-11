@@ -26,98 +26,77 @@
 int main(int argc, char* argv[])
 {
 
-	if (argc != 2)
+	try
 	{
-		std::cout << " Usage: display_image ImageToLoadAndDisplay" << std::endl;
-		return -1;
+
+		if (argc != 2)
+		{
+			std::cout << " Usage: display_image ImageToLoadAndDisplay" << std::endl;
+			return -1;
+		}
+
+		//std::string input = "resources/green-bird-chillis.jpg";
+		//std::string input = "resources/eye.JPG";
+		//std::string input = "resources/lena.bmp";
+		//std::string input = "resources/Bikesgray.jpg";
+		std::string input = "resources/uk.png";
+		//std::string input = "resources/unequalized.jpg";
+		//std::string input = "resources/hough_unit.png";
+
+		//cv::Mat image = LIO::LoadCvImage(argv[1]);
+		//cv::Mat image = LIO::LoadCvImage(input, CV_LOAD_IMAGE_COLOR);
+		cv::Mat image = LIO::LoadCvImage(input);
+
+		cv::namedWindow("Input", cv::WINDOW_AUTOSIZE);// Create a window for display.
+		imshow("Input", image);                   // Show our image inside it.
+
+		LUW::HISTORY main_history(image);
+		LUW::BLUR multi_blur(std::set<int>({ 1, 2, 5, 10 }));
+
+		char filter_prewitt[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
+		char filter_sobel[9] = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
+		cv::Mat mat_filter = cv::Mat(3, 3, CV_8SC1, &filter_sobel);
+		LUW::MATRIXFILTER matrix_filter = LUW::MATRIXFILTER(mat_filter, LUW::MATRIXFILTER::GRADIENT);
+
+		//main_history + LUW::BLUR(3) + matrix_filter;
+
+		// --- HISTOGRAM DEMO ---
+		//main_history + multi_blur + LUW::HISTOGRAM();
+
+		// --- EQUALIZED IMAGE ---
+		//main_history + LUW::EQUALIZER();
+
+		// --- BAYER DEMO ---
+		//main_history + LUW::BAYER(LUW::BAYER::COLOR); //Colored example
+		main_history + LUW::BAYER(LUW::BAYER::BLACK_WHITE) + LUW::BAYER(LUW::BAYER::REVERT); //Demo bayer process
+
+		// --- HOUGH DEMO ---
+		//int blur_values[] = { 1, 3 }; //Init the blur sample set
+		//unsigned int threshold_value[] = { 50, 80, 95 }; //Init the threshold sample set
+		//auto threshold_set = std::set<unsigned int>(threshold_value, threshold_value + 3);
+
+		//main_history + LUW::BLUR(std::set<int>(blur_values, blur_values + 2));
+		//main_history + matrix_filter + LUW::THRESHOLD(threshold_set) + LUW::HOUGH(20);
+
+
+
+		// Send results
+		const std::vector< cv::Mat > last_results = main_history.GetLastResults();
+		int i = 1;
+		for (auto it : last_results)
+		{
+			std::string filename = "output/result_" + std::to_string(i++) + ".png";
+			cv::namedWindow(filename, cv::WINDOW_AUTOSIZE);	// Create a window for display.
+			cv::imshow(filename, it);						// Show our image inside it.
+			LIO::SaveImage(filename, it);
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+		system("PAUSE");
 	}
 
-	cv::Mat image;
-
-	std::string input = "resources/green-bird-chillis.jpg";
-	//std::string input = "resources/eye.JPG";
-	//std::string input = "resources/lena.bmp";
-	//std::string input = "resources/Bikesgray.jpg";
-	//std::string input = "resources/unequalized.jpg";
-	//std::string input = "resources/hough_unit.png";
-
-	//IO_ERROR err = LIO::LoadImage(input, image, CV_LOAD_IMAGE_COLOR);
-
-	IO_ERROR err = LIO::LoadCvImage(input, image);
-
-	//int err = LIOinput::LoadImage(argv[1], image);
-
-	if (err != IO_OK) // Check for invalid input
-	{
-		std::cout << "Could not open or find the image : " << input << std::endl;
-		system("pause");
-		return err;
-	}
-
-	cv::namedWindow("Input", cv::WINDOW_AUTOSIZE);// Create a window for display.
-	imshow("Input", image);                   // Show our image inside it.
-
-
-
-	LUW::HISTORY main_history(image);
-	LUW::BLUR multi_blur(std::set<int>({ 1, 2, 5, 10 }));
-	LUW::REVERT revert;
-
-	char filter_prewitt[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
-	char filter_sobel[9]   = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
-	cv::Mat mat_filter = cv::Mat(3, 3, CV_8SC1, &filter_sobel);
-	LUW::MATRIXFILTER matrix_filter = LUW::MATRIXFILTER(mat_filter, LUW::MATRIXFILTER::GRADIENT);
-
-	//main_history + LUW::BLUR(3) + matrix_filter;
-
-	////HISTOGRAM DEMO
-	//LUW::HISTOGRAM histo;
-	//main_history + histo;
-
-	////EQUALIZED IMAGE
-	//LUW::EQUALIZER equalizer;
-	//main_history + equalizer;
-
-	////BAYER DEMO
-	//LUW::BAYER bayer_demo(LUW::BAYER::COLOR);
-	//main_history + bayer_demo; //Colored example
-
-	//LUW::BAYER bayer(LUW::BAYER::BLACK_WHITE);
-	//LUW::BAYER bayer_revert(LUW::BAYER::REVERT);
-	//main_history + bayer + bayer_revert; //Demo bayer process
-
-	//HOUGH DEMO
-	LUW::HOUGH     hough(100);
-	main_history + LUW::BLUR(3);
-	main_history + matrix_filter;
-	main_history + LUW::THRESHOLD(50);
-	main_history + hough;
-
-	//main_history + multi_blur + revert;
-
-	//cv::cvtColor(main_history.m_last_computed_image, main_history.m_last_computed_image, CV_HSV2RGB);
-	if (err != IO_OK) // Check for invalid compute
-	{
-		std::cout << "error in process " << input << std::endl;
-		system("pause");
-		return err;
-	}
-
-
-
-
-	const std::vector< cv::Mat > last_results = main_history.GetLastResults();
-	int i = 1;
-
-	for (auto it : last_results)
-	{
-		std::string filename = "output/result_" + std::to_string(i++) + ".png";
-		//name += ".png";
-		cv::namedWindow(filename, cv::WINDOW_AUTOSIZE);// Create a window for display.
-		cv::imshow(filename, it);                   // Show our image inside it.
-		LIO::SaveImage(filename, it);
-
-	}
 	cvWaitKey(0);
 
 	//S_INT test(3);

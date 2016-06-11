@@ -3,13 +3,13 @@
 
 
 //NB : this is a way non-optimized (and non official) version of the Bayer revert 
-IO_ERROR LUW::BAYER::ApplyRevert(const cv::Mat& image_in, cv::Mat& image_out)
+void LUW::BAYER::ApplyRevert(const cv::Mat& image_in, cv::Mat& image_out)
 {
 	if (!image_in.data)
-		return IO_NOT_FOUND;
+		throw std::exception("Bayer Filter : Image not found", IO_NOT_FOUND);
 
 	if (image_in.type() != CV_8UC1)
-		return IO_INCOMPATIBLE;
+		throw std::exception("Bayer Filter : Image type not supported", IO_INCOMPATIBLE);
 
 	image_out = cv::Mat::zeros(image_in.rows, image_in.cols, CV_8UC3);
 
@@ -146,9 +146,6 @@ IO_ERROR LUW::BAYER::ApplyRevert(const cv::Mat& image_in, cv::Mat& image_out)
 				rgb_pixel[2] = blue;
 				image_out.at<cv::Vec3b>(ith_row, ith_col) = rgb_pixel;
 			}
-
 		}
 	}
-
-	return IO_OK;
 }

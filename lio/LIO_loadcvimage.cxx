@@ -2,20 +2,24 @@
 #include <opencv2/core.hpp> //Mat
 #include <opencv2/highgui.hpp> //imread
 
-IO_ERROR LIO::LoadCvImage(const std::string& filename, cv::Mat& image, int type)
+cv::Mat LIO::LoadCvImage(const std::string& filename, int type)
 {
 
 	if (filename.size() == 0)
-	{
-		return IO_ERR;
-	}
+		throw std::exception("filename empty", IO_ERR);
 
-	image = cv::imread(filename, type);   // Read the file
+	cv::Mat image = cv::imread(filename, type);   // Read the file
 
-	if (!image.data)                              // Check for invalid input
-	{
-		return IO_NOT_FOUND;
-	}
+	if (!image.data)
+		throw std::exception("File not Found", IO_NOT_FOUND); // Check for invalid input
 
-	return IO_OK;
+	return std::move(image);
+}
+
+std::vector<cv::Mat> LoadCvImagesFromDirectory(const std::string& directory)
+{
+	std::vector<cv::Mat> images;
+
+
+	return std::move(images);
 }

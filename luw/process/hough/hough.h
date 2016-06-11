@@ -2,6 +2,7 @@
 #define __LUW_HOUGH_H_
 
 #include <opencv2/core.hpp> //Mat
+#include <map>
 #include "luw/process/process.h"
 #include "compat/compat.h"
 
@@ -21,8 +22,10 @@ namespace LUW
 		virtual IO_ERROR ApplyGS(const cv::Mat& image_in, cv::Mat& image_out);
 		virtual IO_ERROR ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out);
 
+
 	protected:
 		unsigned int m_nb_samples;
+		std::map<std::pair<int, int >, int > m_grid;
 
 	};
 

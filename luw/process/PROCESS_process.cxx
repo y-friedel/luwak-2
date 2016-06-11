@@ -1,15 +1,15 @@
 #include "luw/process/process.h"
 #include <opencv2/core.hpp> //Mat
 
-#ifdef LUW_DEBUG
+//#ifdef LUW_DEBUG
 #include "compat/session/session.h"
-#endif
+//#endif
 
 IO_ERROR LUW::PROCESS::LogImage(const cv::Mat& image)
 {
-#ifdef LUW_DEBUG
+//#ifdef LUW_DEBUG
 	SESSION::Instance().SaveImage(image);
-#endif
+//#endif
 	return IO_OK;
 }
 

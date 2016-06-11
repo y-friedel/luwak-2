@@ -24,9 +24,9 @@ namespace LUW
 		~BAYER();
 
 		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
-		virtual IO_ERROR ApplyColor(const cv::Mat& image_in, cv::Mat& image_out);
-		virtual IO_ERROR ApplyBlackWhite(const cv::Mat& image_in, cv::Mat& image_out);
-		virtual IO_ERROR ApplyRevert(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual void ApplyColor(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual void ApplyBlackWhite(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual void ApplyRevert(const cv::Mat& image_in, cv::Mat& image_out);
 
 	private:
 		RESULT_TYPE m_result_type;

@@ -1,5 +1,6 @@
 #include "luw/process/matrixfilter/matrixfilter.h"
 #include <opencv2/core.hpp> //Mat
+#include <opencv2/imgproc.hpp>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -110,7 +111,7 @@ std::vector<cv::Mat> LUW::MATRIXFILTER::Apply(const cv::Mat& image_in)
 
 				cv::Vec3b hsv_pixel;
 
-				hsv_pixel[0] = static_cast<uchar>((gradient_direction+M_PI) * 90 / M_PI);
+				hsv_pixel[0] = static_cast<uchar>((gradient_direction+M_PI)/2 * 180 / M_PI);
 				hsv_pixel[1] = 255;
 				hsv_pixel[2] = image_value;
 				image_out.at<cv::Vec3b>(ith_row, ith_col) = hsv_pixel;
@@ -118,8 +119,16 @@ std::vector<cv::Mat> LUW::MATRIXFILTER::Apply(const cv::Mat& image_in)
 		}
 	}
 
-
-	LogImage(image_out);
+	if (m_output_level != GRADIENT)
+	{
+		LogImage(image_out);
+	}
+	else
+	{
+		cv::Mat hsv_result;
+		cv::cvtColor(image_out, hsv_result, CV_HSV2RGB);
+		LogImage(hsv_result);
+	}
 
 	return std::move(results);
 }

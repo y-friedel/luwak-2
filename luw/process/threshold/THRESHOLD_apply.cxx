@@ -1,5 +1,7 @@
 #include "luw/process/threshold/threshold.h"
 #include <opencv2/core.hpp> //Mat
+#include <iostream>
+#include "opencv2/imgproc.hpp"
 
 std::vector<cv::Mat> LUW::THRESHOLD::Apply(const cv::Mat& image_in)
 {
@@ -15,7 +17,7 @@ std::vector<cv::Mat> LUW::THRESHOLD::Apply(const cv::Mat& image_in)
 		ApplyGS(image_in, image_out);
 		break;
 	case CV_8UC3:
-		ApplyHSV(image_in, image_out);
+		return ApplyHSV(image_in);
 		break;
 	}
 
@@ -33,7 +35,7 @@ IO_ERROR LUW::THRESHOLD::ApplyGS(const cv::Mat& image_in, cv::Mat& image_out)
 		return IO_INCOMPATIBLE;
 
 	image_out = cv::Mat::zeros(image_in.rows, image_in.cols, CV_8UC1);
-
+	/*
 #pragma omp parrallel
 	for (int ith_row = 0; ith_row < image_out.rows; ++ith_row)
 	{
@@ -44,27 +46,49 @@ IO_ERROR LUW::THRESHOLD::ApplyGS(const cv::Mat& image_in, cv::Mat& image_out)
 				image_out.at<uchar>(ith_row, ith_col) = 255;
 		}
 	}
-
+	*/
 	return IO_OK;
 }
 
 
-IO_ERROR LUW::THRESHOLD::ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out)
+std::vector<cv::Mat> LUW::THRESHOLD::ApplyHSV(const cv::Mat& image_in)
 {
-	image_out = cv::Mat::zeros(image_in.rows, image_in.cols, CV_8UC3);
 
-	cv::MatConstIterator_<cv::Vec3b> it_in = image_in.begin<cv::Vec3b>();
-	cv::MatIterator_<cv::Vec3b> it_out = image_out.begin<cv::Vec3b>();
+	std::vector<cv::Mat> images_out;
+	std::vector<cv::MatIterator_<cv::Vec3b > > vec_it_out;
+	for (auto i = 0u; i < m_threshold.size(); ++i)
+	{
+		images_out.push_back(cv::Mat::zeros(image_in.rows, image_in.cols, CV_8UC3));
+		vec_it_out.push_back(images_out.back().begin<cv::Vec3b>());
+	}
 
 	#pragma omp parrallel
-	for (; it_out != image_out.end<cv::Vec3b>(); ++it_out, ++it_in)
+	for (auto& it_in = image_in.begin<cv::Vec3b>(); it_in != image_in.end<cv::Vec3b>(); ++it_in)
 	{
-		if ((*it_in)[2] > m_threshold)
+		std::set<unsigned int>::iterator threshold_value = m_threshold.begin();
+
+		#pragma omp parrallel
+		for (unsigned int i = 0; i < m_threshold.size(); ++i)
 		{
-			(*it_out) = (*it_in);
-			(*it_out)[2] = 255;
+			auto it_out = vec_it_out[i];
+			if ((*it_in)[2] > (*threshold_value))
+			{
+				(*it_out) = (*it_in);
+				(*it_out)[2] = 255;
+			}
+
+			++threshold_value;
+			if (it_in + 1 != image_in.end<cv::Vec3b>()) 
+				vec_it_out[i]++;
 		}
 	}
 
-	return IO_OK;
+	for (auto& image_out = images_out.begin(); image_out != images_out.end(); ++image_out)
+	{
+		cv::Mat hsv_result;
+		cv::cvtColor((*image_out), hsv_result, CV_HSV2RGB);
+		LogImage(hsv_result);
+	}
+
+	return images_out;
 }

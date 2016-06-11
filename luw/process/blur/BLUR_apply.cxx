@@ -19,5 +19,5 @@ std::vector<cv::Mat> LUW::BLUR::Apply(const cv::Mat& image_in)
 		results.emplace_back(image_out);
 	}
 
-	return results;
+	return std::move(results);
 }

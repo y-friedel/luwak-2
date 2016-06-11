@@ -4,6 +4,7 @@
 #include <opencv2/core.hpp> //Mat
 #include "luw/process/process.h"
 #include "compat/compat.h"
+#include <set>
 
 namespace LUW
 {
@@ -12,15 +13,16 @@ namespace LUW
 	public:
 
 		//Constructor/Destructor
-		THRESHOLD(unsigned int threshold) : m_threshold(threshold){}
+		THRESHOLD(std::set<unsigned int> threshold) : m_threshold(threshold){}
 		~THRESHOLD(){}
 
 		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
 		virtual IO_ERROR ApplyGS(const cv::Mat& image_in, cv::Mat& image_out);
-		virtual IO_ERROR ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out);
+		//virtual IO_ERROR ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out);
+		virtual std::vector<cv::Mat> ApplyHSV(const cv::Mat& image_in);
 
 	private:
-		unsigned int m_threshold;
+		std::set<unsigned int> m_threshold;
 
 
 	};

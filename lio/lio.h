@@ -3,6 +3,7 @@
 #define __LIO_H_
 
 #include <string>
+#include <vector>
 #include "compat/compat.h"
 
 namespace cv
@@ -12,7 +13,8 @@ namespace cv
 
 namespace LIO
 {
-	IO_ERROR LoadCvImage(const std::string& filename, cv::Mat& image, int type = 0); //CV_LOAD_IMAGE_GRAYSCALE
+	cv::Mat LoadCvImage(const std::string& filename, int type = 0); //CV_LOAD_IMAGE_GRAYSCALE
+	std::vector<cv::Mat> LoadCvImagesFromDirectory(const std::string& directory); //CV_LOAD_IMAGE_GRAYSCALE
 	IO_ERROR SaveImage(const std::string& filename, const cv::Mat& image);
 
 	std::string Type2Str(int type);
