@@ -5,7 +5,9 @@
 
 std::vector<cv::Mat> LUW::THRESHOLD::Apply(const cv::Mat& image_in)
 {
-	assert(image_in.data);
+
+	if (!image_in.data)
+		throw std::exception("Threshold  Filter : Image not found", IO_NOT_FOUND);
 
 	std::vector<cv::Mat> results;
 	results.emplace_back();
@@ -28,11 +30,6 @@ std::vector<cv::Mat> LUW::THRESHOLD::Apply(const cv::Mat& image_in)
 
 IO_ERROR LUW::THRESHOLD::ApplyGS(const cv::Mat& image_in, cv::Mat& image_out)
 {
-	if (!image_in.data)
-		return IO_NOT_FOUND;
-
-	if (image_in.type() != CV_8UC1)
-		return IO_INCOMPATIBLE;
 
 	image_out = cv::Mat::zeros(image_in.rows, image_in.cols, CV_8UC1);
 	/*

@@ -15,12 +15,11 @@ namespace LUW
 		HISTORY(cv::Mat& ori_img); // : m_last_computed_image(ori_img) { };
 		~HISTORY() { };
 
-		IO_ERROR AddNextStep(LUW::PROCESS& process);
-		IO_ERROR ComputeHistory();
+		void AddNextStep(LUW::PROCESS& process);
 
 		LUW::HISTORY& operator+(LUW::PROCESS& process)
 		{
-			IO_ERROR msg = AddNextStep(process);
+			AddNextStep(process);
 			return (*this);
 		}
 

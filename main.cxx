@@ -17,7 +17,6 @@
 #include "luw/process/histogram/histogram.h"
 #include "luw/process/histogram/equalizer/equalizer.h"
 #include "luw/process/bayer/bayer.h"
-
 #include "luw/process/hough/hough.h"
 
 //Workdir
@@ -60,6 +59,11 @@ int main(int argc, char* argv[])
 
 		//main_history + LUW::BLUR(3) + matrix_filter;
 
+		//Filter reuse
+		main_history + multi_blur + multi_blur;
+
+		//main_history + LUW::BLUR(3) + matrix_filter;
+
 		// --- HISTOGRAM DEMO ---
 		//main_history + multi_blur + LUW::HISTOGRAM();
 
@@ -68,7 +72,7 @@ int main(int argc, char* argv[])
 
 		// --- BAYER DEMO ---
 		//main_history + LUW::BAYER(LUW::BAYER::COLOR); //Colored example
-		main_history + LUW::BAYER(LUW::BAYER::BLACK_WHITE) + LUW::BAYER(LUW::BAYER::REVERT); //Demo bayer process
+		//main_history + LUW::BAYER(LUW::BAYER::BLACK_WHITE) + LUW::BAYER(LUW::BAYER::REVERT); //Demo bayer process
 
 		// --- HOUGH DEMO ---
 		//int blur_values[] = { 1, 3 }; //Init the blur sample set
@@ -77,8 +81,6 @@ int main(int argc, char* argv[])
 
 		//main_history + LUW::BLUR(std::set<int>(blur_values, blur_values + 2));
 		//main_history + matrix_filter + LUW::THRESHOLD(threshold_set) + LUW::HOUGH(20);
-
-
 
 		// Send results
 		const std::vector< cv::Mat > last_results = main_history.GetLastResults();

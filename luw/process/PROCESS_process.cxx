@@ -5,12 +5,9 @@
 #include "compat/session/session.h"
 //#endif
 
-IO_ERROR LUW::PROCESS::LogImage(const cv::Mat& image)
+void LUW::PROCESS::LogImage(const cv::Mat& image)
 {
-//#ifdef LUW_DEBUG
 	SESSION::Instance().SaveImage(image);
-//#endif
-	return IO_OK;
 }
 
 std::vector<cv::Mat> LUW::PROCESS::Apply(const cv::Mat& image_in)

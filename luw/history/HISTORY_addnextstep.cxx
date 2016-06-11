@@ -1,8 +1,7 @@
 #include "luw/history/history.h"
 
-IO_ERROR LUW::HISTORY::AddNextStep(LUW::PROCESS& process)
+void LUW::HISTORY::AddNextStep(LUW::PROCESS& process)
 {
-	IO_ERROR err = IO_OK;
 	m_process.emplace_back(process);
 
 	auto& it_images = m_steps.back().begin();
@@ -17,7 +16,4 @@ IO_ERROR LUW::HISTORY::AddNextStep(LUW::PROCESS& process)
 		//auto& image_out = results.back();
 		//err = process.Apply((*it_images), image_out);
 	}
-
-
-	return err;
 }

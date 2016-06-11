@@ -16,7 +16,7 @@ namespace LUW
 
 		//Constructor/Destructor
 		BLUR(int _size);
-		BLUR(std::set<int> _sizes);
+		BLUR(std::set<int>& _sizes);
 		~BLUR();
 
 		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);

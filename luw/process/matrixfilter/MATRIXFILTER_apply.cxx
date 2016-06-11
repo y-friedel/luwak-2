@@ -7,8 +7,11 @@
 
 std::vector<cv::Mat> LUW::MATRIXFILTER::Apply(const cv::Mat& image_in)
 {
-	assert(image_in.data);
-	assert(image_in.type() == CV_8UC1);
+	if (!image_in.data)
+		throw std::exception("Matrix Filter : Image not found", IO_NOT_FOUND);
+
+	if (image_in.type() != CV_8UC1)
+		throw std::exception("Matrix Filter : Image type not supported", IO_INCOMPATIBLE);
 
 	std::vector<cv::Mat> results;
 	results.emplace_back();

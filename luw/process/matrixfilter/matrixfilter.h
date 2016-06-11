@@ -10,21 +10,21 @@ namespace LUW
 	class MATRIXFILTER : public PROCESS
 	{
 	public:
-		enum OUTPUT_LEVEL
+		enum OUTPUT_TYPE
 		{
 			INTENSITY,
 			GRADIENT,
 		};
 
 		//Constructor/Destructor
-		MATRIXFILTER(cv::Mat& filter, OUTPUT_LEVEL output_level = INTENSITY);
+		MATRIXFILTER(cv::Mat& filter, OUTPUT_TYPE output_type = INTENSITY);
 		~MATRIXFILTER();
 
 		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
 
 	private:
 		cv::Mat m_filter_matrix;
-		OUTPUT_LEVEL m_output_level;
+		OUTPUT_TYPE m_output_level;
 
 
 	};

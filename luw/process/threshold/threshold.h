@@ -17,8 +17,9 @@ namespace LUW
 		~THRESHOLD(){}
 
 		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
+
+	private:
 		virtual IO_ERROR ApplyGS(const cv::Mat& image_in, cv::Mat& image_out);
-		//virtual IO_ERROR ApplyHSV(const cv::Mat& image_in, cv::Mat& image_out);
 		virtual std::vector<cv::Mat> ApplyHSV(const cv::Mat& image_in);
 
 	private:

@@ -13,11 +13,9 @@ namespace LUW
 		PROCESS(){}
 		~PROCESS(){}
 
-		//PROCESS& operator=(PROCESS&&);
-
 		virtual std::vector<cv::Mat> Apply(const cv::Mat& image_in);
 
-		IO_ERROR LogImage(const cv::Mat& image);
+		void LogImage(const cv::Mat& image);
 
 	private:
 	};

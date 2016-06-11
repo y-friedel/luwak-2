@@ -17,7 +17,7 @@ namespace LUW
 		STEP(const cv::Mat images_in, LUW::PROCESS& _process) : m_image_to_process(images_in), m_process(_process), m_has_changed(true) { }
 		~STEP();
 
-		inline std::vector<cv::Mat>&& Result()
+		inline std::vector<cv::Mat> Result()
 		{
 			std::vector<cv::Mat> result = m_process.Apply(m_image_to_process);
 			m_has_changed = false;

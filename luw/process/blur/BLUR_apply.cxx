@@ -7,10 +7,10 @@
 std::vector<cv::Mat> LUW::BLUR::Apply(const cv::Mat& image_in)
 {
 
+	if(!image_in.data)
+		throw std::exception("Blur Filter : Image not found", IO_NOT_FOUND);
+
 	std::vector<cv::Mat> results;
-
-	assert(image_in.data);
-
 	for (auto size_value : m_blur_size)
 	{
 		cv::Mat image_out;
