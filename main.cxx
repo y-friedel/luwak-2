@@ -14,6 +14,7 @@
 #include "luw/process/threshold/threshold.h"
 #include "luw/process/blur/blur.h"
 #include "luw/process/matrixfilter/matrixfilter.h"
+#include "luw/process/trilinearfilter/trilinearfilter.h"
 #include "luw/process/histogram/histogram.h"
 #include "luw/process/histogram/equalizer/equalizer.h"
 #include "luw/process/bayer/bayer.h"
@@ -36,31 +37,32 @@ int main(int argc, char* argv[])
 
 		//std::string input = "resources/green-bird-chillis.jpg";
 		//std::string input = "resources/eye.JPG";
-		//std::string input = "resources/lena.bmp";
+		std::string input = "resources/lena.bmp";
 		//std::string input = "resources/Bikesgray.jpg";
-		std::string input = "resources/uk.png";
+		//std::string input = "resources/uk.png";
+		//std::string input = "resources/ugly_smiley.png";
 		//std::string input = "resources/unequalized.jpg";
 		//std::string input = "resources/hough_unit.png";
 
 		//cv::Mat image = LIO::LoadCvImage(argv[1]);
-		//cv::Mat image = LIO::LoadCvImage(input, CV_LOAD_IMAGE_COLOR);
-		cv::Mat image = LIO::LoadCvImage(input);
+		cv::Mat image = LIO::LoadCvImage(input, CV_LOAD_IMAGE_COLOR);
+		//cv::Mat image = LIO::LoadCvImage(input);
 
 		cv::namedWindow("Input", cv::WINDOW_AUTOSIZE);// Create a window for display.
 		imshow("Input", image);                   // Show our image inside it.
 
 		LUW::HISTORY main_history(image);
-		LUW::BLUR multi_blur(std::set<int>({ 1, 2, 5, 10 }));
+		//LUW::BLUR multi_blur(std::set<int>({ 1, 2, 5, 10 }));
 
-		char filter_prewitt[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
-		char filter_sobel[9] = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
-		cv::Mat mat_filter = cv::Mat(3, 3, CV_8SC1, &filter_sobel);
-		LUW::MATRIXFILTER matrix_filter = LUW::MATRIXFILTER(mat_filter, LUW::MATRIXFILTER::GRADIENT);
+		//char filter_prewitt[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
+		//char filter_sobel[9] = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
+		//cv::Mat mat_filter = cv::Mat(3, 3, CV_8SC1, &filter_sobel);
+		//LUW::MATRIXFILTER matrix_filter = LUW::MATRIXFILTER(mat_filter, LUW::MATRIXFILTER::GRADIENT);
 
 		//main_history + LUW::BLUR(3) + matrix_filter;
 
 		//Filter reuse
-		main_history + multi_blur + multi_blur;
+		//main_history + multi_blur + multi_blur;
 
 		//main_history + LUW::BLUR(3) + matrix_filter;
 
@@ -81,6 +83,9 @@ int main(int argc, char* argv[])
 
 		//main_history + LUW::BLUR(std::set<int>(blur_values, blur_values + 2));
 		//main_history + matrix_filter + LUW::THRESHOLD(threshold_set) + LUW::HOUGH(20);
+
+		//TRILINEAR FILTER DEMO
+		main_history + LUW::TRILINEARFILTER();
 
 		// Send results
 		const std::vector< cv::Mat > last_results = main_history.GetLastResults();
@@ -103,3 +108,5 @@ int main(int argc, char* argv[])
 
 	//S_INT test(3);
 }
+
+
